@@ -9,7 +9,7 @@ const config = {
 			fallback: 'index.html' // important
 		}),
 		paths: {
-			base: '/docs'
+			base: '/ead-tool'
 		}
 	}
 };
