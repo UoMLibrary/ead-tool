@@ -1,0 +1,242 @@
+/* -------------------------------------------------
+   CSS RESET / BASE
+------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Ubuntu,
+    sans-serif;
+
+  background: #f9fafb;
+  color: #111827;
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------
+   LAYOUT
+------------------------------------------------- */
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+section {
+  margin-top: 2rem;
+}
+
+/* -------------------------------------------------
+   TYPOGRAPHY
+------------------------------------------------- */
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin: 0.25rem 0;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* -------------------------------------------------
+   DROP ZONE (ExcelDropZone)
+------------------------------------------------- */
+
+.dropzone {
+  position: relative;
+  background: #ffffff;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.dropzone.dragging {
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+
+.dropzone p {
+  color: #6b7280;
+}
+
+.dropzone strong {
+  color: #111827;
+}
+
+.dropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* -------------------------------------------------
+   STRUCTURE SELECTOR
+------------------------------------------------- */
+
+.structure {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.structure label {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.structure label:hover {
+  background: #f9fafb;
+}
+
+.structure input[type="radio"] {
+  margin-top: 0.2rem;
+}
+
+.structure .hint {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.structure .note {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* -------------------------------------------------
+   SUMMARY PANEL
+------------------------------------------------- */
+
+.summary {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.summary ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.summary li {
+  margin: 0.5rem 0;
+}
+
+/* -------------------------------------------------
+   WARNINGS
+------------------------------------------------- */
+
+.warning {
+  color: #92400e;
+}
+
+.warnings {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+}
+
+.warnings h3 {
+  margin-top: 0;
+  color: #92400e;
+}
+
+.warnings ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.warnings li {
+  font-size: 0.9rem;
+}
+
+/* -------------------------------------------------
+   ERRORS
+------------------------------------------------- */
+
+.error {
+  color: #b91c1c;
+  margin-top: 1rem;
+}
+
+/* -------------------------------------------------
+   BUTTONS
+------------------------------------------------- */
+
+button {
+  appearance: none;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:not(:disabled) {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+button:not(:disabled):hover {
+  background: #1d4ed8;
+}
+
+/* -------------------------------------------------
+   PRIMARY ACTION BUTTON
+------------------------------------------------- */
+
+button.primary {
+  width: 100%;
+  margin-top: 1.5rem;
+}
