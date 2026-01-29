@@ -7,7 +7,10 @@ const config = {
 			pages: 'docs',
 			assets: 'docs',
 			fallback: 'index.html' // important
-		})
+		}),
+		paths: {
+			base: '/ead-tool'
+		}
 	}
 };
 
