@@ -47,8 +47,6 @@ function normaliseLevel(value: unknown): Level | null {
     throw new Error(`Invalid <c level>: "${value}"`);
 }
 
-
-
 export function normaliseRows(rows: RawRow[]): NormalisedResult {
     if (!rows.length) {
         throw new Error('Excel file contains no rows');
