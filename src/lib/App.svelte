@@ -40,7 +40,7 @@
 	// -----------------------------
 	// Build XML (Step 6)
 	// -----------------------------
-	$: if (tree) {
+	$: if (tree && result && structure) {
 		xmlDoc = buildEadXml(tree);
 	}
 

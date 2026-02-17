@@ -1,11 +1,19 @@
-export type Level = 'series' | 'file' | 'item';
+export type Level =
+    | 'fonds'
+    | 'subfonds'
+    | 'series'
+    | 'subseries'
+    | 'file'
+    | 'item';
 
 export interface ArchivalNode {
-    id: string;           // unitid
+    id: string;
     level: Level;
-    title: string;        // unittitle
-    date?: string;        // unitdate
-    extent?: string;      // extent
-    scope?: string[];     // scopecontent paragraphs
+    title: string;
+    date?: string;
+    extent?: string;
+    condition?: string;  // NEW
+    language?: string;   // NEW
+    scope?: string[];
     children: ArchivalNode[];
 }

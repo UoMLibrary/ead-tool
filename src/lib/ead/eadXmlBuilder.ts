@@ -40,12 +40,30 @@ function buildComponent(doc: XMLDocument, node: ArchivalNode): Element {
         did.appendChild(unitdate);
     }
 
-    if (node.extent) {
+    // physdesc (extent + condition)
+    if (node.extent || node.condition) {
         const physdesc = el(doc, 'physdesc');
-        appendText(physdesc, 'extent', node.extent);
+
+        if (node.extent) {
+            appendText(physdesc, 'extent', node.extent);
+        }
+
+        if (node.condition) {
+            const physfacet = appendText(physdesc, 'physfacet', node.condition);
+            physfacet.setAttribute('label', 'Condition:');
+        }
+
         did.appendChild(physdesc);
     }
 
+    // ✅ NEW: language block
+    if (node.language) {
+        const langmaterial = el(doc, 'langmaterial');
+        appendText(langmaterial, 'language', node.language);
+        did.appendChild(langmaterial);
+    }
+
+    // scopecontent (outside <did>)
     if (node.scope?.length) {
         const scope = el(doc, 'scopecontent');
         for (const para of node.scope) {
@@ -62,6 +80,7 @@ function buildComponent(doc: XMLDocument, node: ArchivalNode): Element {
     return c;
 }
 
+
 function el(
     doc: XMLDocument,
     name: string,
@@ -76,8 +95,10 @@ function el(
     return e;
 }
 
-function appendText(parent: Element, name: string, text: string) {
+function appendText(parent: Element, name: string, text: string): Element {
     const el = parent.ownerDocument!.createElement(name);
     el.textContent = text;
     parent.appendChild(el);
+    return el;
 }
+

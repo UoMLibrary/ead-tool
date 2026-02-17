@@ -18,6 +18,15 @@ function findColumn(
     return col;
 }
 
+function findOptionalColumn(
+    columns: string[],
+    keywords: string[]
+): string | undefined {
+    return columns.find(c =>
+        keywords.some(k => c.toLowerCase().includes(k))
+    );
+}
+
 function cleanText(value: unknown): string | undefined {
     if (value === null || value === undefined) return undefined;
     const s = String(value).trim();
@@ -40,8 +49,15 @@ function normaliseLevel(value: unknown): Level | null {
     const level = String(value).trim().toLowerCase();
     if (!level) return null;
 
-    if (level === 'series' || level === 'file' || level === 'item') {
-        return level;
+    if (
+        level === 'fonds' ||
+        level === 'subfonds' ||
+        level === 'series' ||
+        level === 'subseries' ||
+        level === 'file' ||
+        level === 'item'
+    ) {
+        return level as Level;
     }
 
     throw new Error(`Invalid <c level>: "${value}"`);
@@ -56,18 +72,44 @@ export function normaliseRows(rows: RawRow[]): NormalisedResult {
 
     const columns = Object.keys(rows[0]);
 
-    const levelCol = findColumn(columns, c => c.toLowerCase().includes('<c level'));
-    const unitidCol = findColumn(columns, c => c.toLowerCase().includes('<unitid'));
-    const titleCol = findColumn(columns, c => c.toLowerCase().includes('<unittitle'));
-    const dateCol = findColumn(columns, c => c.toLowerCase().includes('<unitdate'));
+    // Required columns
+    const levelCol = findColumn(columns, c =>
+        c.toLowerCase().includes('<c level')
+    );
 
-    const extentCol = columns.find(c => c.toLowerCase().includes('<extent'));
-    const scopeCol = columns.find(c => c.toLowerCase().includes('<scopecontent'));
+    const unitidCol = findColumn(columns, c =>
+        c.toLowerCase().includes('<unitid')
+    );
+
+    const titleCol = findColumn(columns, c =>
+        c.toLowerCase().includes('<unittitle')
+    );
+
+    const dateCol = findColumn(columns, c =>
+        c.toLowerCase().includes('<unitdate')
+    );
+
+    // Optional columns (flexible detection)
+    const extentCol = findOptionalColumn(columns, ['<extent']);
+
+    const scopeCol = findOptionalColumn(columns, ['<scopecontent']);
+
+    const languageCol = findOptionalColumn(columns, [
+        '<langmaterial',
+        '<language',
+        'language'
+    ]);
+
+    const conditionCol = findOptionalColumn(columns, [
+        'physfacet',
+        'condition'
+    ]);
 
     const nodes: ArchivalNode[] = [];
 
     for (const row of rows) {
         const id = cleanText(row[unitidCol]);
+
         if (!id) {
             throw new Error('Row found with empty <unitid>');
         }
@@ -86,12 +128,20 @@ export function normaliseRows(rows: RawRow[]): NormalisedResult {
             title: cleanText(row[titleCol]) ?? '',
             date: cleanText(row[dateCol]),
             extent: extentCol ? cleanText(row[extentCol]) : undefined,
-            scope: scopeCol ? splitParagraphs(row[scopeCol]) : undefined,
+            condition: conditionCol
+                ? cleanText(row[conditionCol])
+                : undefined,
+            language: languageCol
+                ? cleanText(row[languageCol])
+                : undefined,
+            scope: scopeCol
+                ? splitParagraphs(row[scopeCol])
+                : undefined,
             children: []
         };
 
-        nodes.push(node);
 
+        nodes.push(node);
     }
 
     const seriesNodes = nodes.filter(n => n.level === 'series');
