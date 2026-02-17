@@ -72,7 +72,10 @@ export function normaliseRows(rows: RawRow[]): NormalisedResult {
 
     const columns = Object.keys(rows[0]);
 
+    // -----------------------------
     // Required columns
+    // -----------------------------
+
     const levelCol = findColumn(columns, c =>
         c.toLowerCase().includes('<c level')
     );
@@ -89,7 +92,10 @@ export function normaliseRows(rows: RawRow[]): NormalisedResult {
         c.toLowerCase().includes('<unitdate')
     );
 
+    // -----------------------------
     // Optional columns (flexible detection)
+    // -----------------------------
+
     const extentCol = findOptionalColumn(columns, ['<extent']);
 
     const scopeCol = findOptionalColumn(columns, ['<scopecontent']);
@@ -104,6 +110,10 @@ export function normaliseRows(rows: RawRow[]): NormalisedResult {
         'physfacet',
         'condition'
     ]);
+
+    // -----------------------------
+    // Build nodes
+    // -----------------------------
 
     const nodes: ArchivalNode[] = [];
 
@@ -140,20 +150,30 @@ export function normaliseRows(rows: RawRow[]): NormalisedResult {
             children: []
         };
 
-
         nodes.push(node);
     }
 
+    if (nodes.length === 0) {
+        throw new Error('No descriptive rows found');
+    }
+
+    // -----------------------------
+    // Root selection (no longer enforce single series)
+    // -----------------------------
+
     const seriesNodes = nodes.filter(n => n.level === 'series');
 
-    if (seriesNodes.length !== 1) {
-        throw new Error(
-            `Expected exactly one series row, found ${seriesNodes.length}`
-        );
+    let primarySeries: ArchivalNode;
+
+    if (seriesNodes.length > 0) {
+        primarySeries = seriesNodes[0];
+    } else {
+        // Fallback if no series rows exist (e.g., fonds-level spreadsheet)
+        primarySeries = nodes[0];
     }
 
     return {
-        series: seriesNodes[0],
+        series: primarySeries,
         nodes,
         skippedRows
     };
