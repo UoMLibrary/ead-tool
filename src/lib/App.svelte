@@ -13,6 +13,8 @@
 	import { downloadXml } from '$lib/ead/downloadXml';
 	import { makeEadFilename } from '$lib/ead/filename';
 
+	const version = import.meta.env.VITE_APP_VERSION;
+
 	let tree = null;
 	let result = null;
 	let structure: StructureType | null = null;
@@ -80,6 +82,24 @@
 </script>
 
 <main>
+	<header class="intro">
+		<h1>
+			Excel to EAD XML Converter
+			<span class="version">v{version}</span>
+		</h1>
+		<p>
+			This tool transforms structured Excel spreadsheets into Encoded Archival Description (EAD)
+			XML. Upload your spreadsheet, select the desired structure, review any validation warnings,
+			and download a ready-to-deposit EAD file.
+		</p>
+		<p>Supports:</p>
+		<ul>
+			<li>Hierarchical Series → File → Item structures</li>
+			<li>Flat Series → Item structures</li>
+			<li>Row validation and skipped row reporting</li>
+			<li>Pre-download conversion summary</li>
+		</ul>
+	</header>
 	<ExcelDropZone on:file={handleFile} />
 
 	{#if error}
@@ -149,3 +169,31 @@
 		<button class="primary" on:click={handleDownload} disabled={!xmlDoc}> Download EAD XML </button>
 	{/if}
 </main>
+
+<style>
+	.intro {
+		margin-bottom: 2rem;
+		max-width: 800px;
+	}
+
+	.intro h1 {
+		display: flex;
+		align-items: baseline;
+		gap: 0.75rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.version {
+		font-size: 0.8rem;
+		font-weight: 400;
+		color: #888;
+		background: #f2f2f2;
+		padding: 0.15rem 0.4rem;
+		border-radius: 4px;
+	}
+
+	.intro p {
+		margin-bottom: 0.75rem;
+		color: #444;
+	}
+</style>
