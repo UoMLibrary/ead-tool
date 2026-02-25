@@ -93,19 +93,16 @@ export function normaliseRows(rows: RawRow[]): NormalisedResult {
     );
 
     // -----------------------------
-    // Optional columns (flexible detection)
+    // Optional columns
     // -----------------------------
 
     const extentCol = findOptionalColumn(columns, ['<extent']);
-
     const scopeCol = findOptionalColumn(columns, ['<scopecontent']);
-
     const languageCol = findOptionalColumn(columns, [
         '<langmaterial',
         '<language',
         'language'
     ]);
-
     const conditionCol = findOptionalColumn(columns, [
         'physfacet',
         'condition'
@@ -126,7 +123,7 @@ export function normaliseRows(rows: RawRow[]): NormalisedResult {
 
         const level = normaliseLevel(row[levelCol]);
 
-        // Skip rows that are not descriptive units
+        // Skip non-structural rows
         if (!level) {
             skippedRows++;
             continue;
@@ -158,22 +155,35 @@ export function normaliseRows(rows: RawRow[]): NormalisedResult {
     }
 
     // -----------------------------
-    // Root selection (no longer enforce single series)
+    // Root selection
+    // Highest structural level wins
     // -----------------------------
 
-    const seriesNodes = nodes.filter(n => n.level === 'series');
+    const levelPriority: Level[] = [
+        'fonds',
+        'subfonds',
+        'series',
+        'subseries',
+        'file',
+        'item'
+    ];
 
-    let primarySeries: ArchivalNode;
+    let rootNode: ArchivalNode | undefined;
 
-    if (seriesNodes.length > 0) {
-        primarySeries = seriesNodes[0];
-    } else {
-        // Fallback if no series rows exist (e.g., fonds-level spreadsheet)
-        primarySeries = nodes[0];
+    for (const level of levelPriority) {
+        const found = nodes.find(n => n.level === level);
+        if (found) {
+            rootNode = found;
+            break;
+        }
+    }
+
+    if (!rootNode) {
+        throw new Error('No valid root node found');
     }
 
     return {
-        series: primarySeries,
+        series: rootNode,
         nodes,
         skippedRows
     };
